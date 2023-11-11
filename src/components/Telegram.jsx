@@ -5,6 +5,7 @@ async function handleSuccess(response) {
   console.log(response);
   const url = "https://http.cat/200";
   const body = JSON.stringify(response);
+  console.log(body);
   try {
     let apiResponse = await axios.get("https://http.cat/200");
     console.log(apiResponse);
@@ -21,7 +22,11 @@ function Telegram() {
       console.log(err);
     },
   };
-  const { onAuth, isLoading } = useTelegramAuth(BOT_ID, {}, handlers);
+  const { onAuth, isLoading } = useTelegramAuth(
+    BOT_ID,
+    { requestAccess: "write" },
+    handlers,
+  );
 
   return (
     <>
