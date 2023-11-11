@@ -6,6 +6,6 @@ body {
   margin: 0px;
   padding: 0px;
 }
-body::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 0px;
 }
