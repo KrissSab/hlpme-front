@@ -20,6 +20,7 @@ function Homepage() {
       lng: event.latLng.lng(),
     };
     setMarkers([...markers, newMarker]);
+    console.log(...markers)
   }
 
   return (
@@ -56,10 +57,13 @@ function Homepage() {
                 zoom={13}
                 center={{ lat: 49.839684, lng: 24.029716 }}
                 onClick={onMapClick}
-                {...markers.map((marker, index) => (
+              >
+                {markers.map((marker, index) => (
                   <Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} />
                 ))}
-              />
+              </GoogleMap>
+
+
               <div className="w-[600px] h-[600px] border-black border-4 rounded-2xl ml-8 bg-white">
                 <h3 className="flex items-center justify-center m-3">My markers:</h3>
                 <ul className=" max-h-[250px] overflow-scroll">
