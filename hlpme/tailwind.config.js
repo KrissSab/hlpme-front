@@ -8,9 +8,9 @@ export default {
       colors: {
         "light-green": "#a5ff8d",
         "midle-green": "#23e912",
-        "dark-green": "#37910a"
+        "dark-green": "#37910a",
       },
       plugins: [],
-    }
-  }
+    },
+  },
 };

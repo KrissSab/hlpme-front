@@ -12,9 +12,11 @@
   "dependencies": {
     "@googlemaps/react-wrapper": "^1.1.35",
     "@react-google-maps/api": "^2.19.2",
+    "@use-telegram-auth/hook": "^1.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.18.0"
+    "react-router-dom": "^6.18.0",
+    "react-telegram-login": "^1.1.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

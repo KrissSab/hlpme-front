@@ -7,7 +7,7 @@ import { API_KEY } from "../constants";
 
 
 function Homepage() {
-  const [select, setSelect] = useState('Local');
+  const [select, setSelect] = useState("Local");
 
   return (
     <div className=" h-screen w-screen">
