@@ -8,9 +8,27 @@ import { API_KEY } from "../constants";
 
 function Homepage() {
   const [select, setSelect] = useState("Local");
-  const [markers, setMarkers] = useState([]);
-  const [lastLatPosition, setLatPosition] = useState('none')
-  const [lastLngPosition, setLngPosition] = useState('none')
+  const [marker, setMarker] = useState(null);
+  const [lastLatPosition, setLatPosition] = useState(null)
+  const [lastLngPosition, setLngPosition] = useState(null)
+  const [problemName, setProblemName] = useState(null);
+  const [description, setDescription] = useState(null);
+
+  const changeHandler = (e, setter) => {
+    setter(e.target.value);
+    console.log(problemName, description);
+  };
+
+  const submitData = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(PORT + "/local/dangers/create",);
+      return navigate("/");
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const onMapClick = (event) => {
     setLatPosition(event.latLng.lat())
@@ -19,8 +37,8 @@ function Homepage() {
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
     };
-    setMarkers([...markers, newMarker]);
-    console.log(...markers)
+    setMarker(newMarker);
+    console.log(marker);
   }
 
   return (
@@ -58,9 +76,7 @@ function Homepage() {
                 center={{ lat: 49.839684, lng: 24.029716 }}
                 onClick={onMapClick}
               >
-                {markers.map((marker, index) => (
-                  <Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} />
-                ))}
+                {marker && <Marker position={{ lat: marker.lat, lng: marker.lng }} />}
               </GoogleMap>
 
 
@@ -83,8 +99,11 @@ function Homepage() {
                   <li className="flex m-2 border-2 rounded-xl border-black p-1 justify-between">Mark3<img src={editImg} className="h-6 w-6 ml-4 hover:cursor-pointer"></img></li>
                   <li className="flex m-2 border-2 rounded-xl border-black p-1 justify-between">Mark3<img src={editImg} className="h-6 w-6 ml-4 hover:cursor-pointer"></img></li>
                 </ul>
-                <div>Last chosen position: {lastLatPosition} and {lastLngPosition}</div>
-                <div>Create marker</div>
+                <div>Last chosen position: {lastLatPosition} and {lastLngPosition}
+                </div>
+                <input type="text" placeholder="Problem name" onChange={(e) => { changeHandler(e, setProblemName) }} />
+                <input type="text" placeholder="Description" onChange={(e) => { changeHandler(e, setDescription) }} />
+                <div onClick={submitData}>Create marker</div>
               </div>
             </div>
           ) : null
