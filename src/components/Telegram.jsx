@@ -1,21 +1,28 @@
 import useTelegramAuth from "@use-telegram-auth/hook";
+import axios from "axios";
+
+async function handleSuccess(response) {
+  console.log(response);
+  const url = "https://http.cat/200";
+  const body = JSON.stringify(response);
+  try {
+    let apiResponse = await axios.get("https://http.cat/200");
+    console.log(apiResponse);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 function Telegram() {
   const BOT_ID = "6932897811";
-
-  const { onAuth, isLoading } = useTelegramAuth(
-    BOT_ID,
-    {},
-    {
-      onSuccess: (response) => {
-        console.log(response);
-        return response;
-      },
-      onError: (err) => {
-        console.log(err);
-      },
+  const handlers = {
+    onSuccess: async (response) => await handleSuccess(response),
+    onError: (err) => {
+      console.log(err);
     },
-  );
+  };
+  const { onAuth, isLoading } = useTelegramAuth(BOT_ID, {}, handlers);
+
   return (
     <>
       <div className="flex h-[123px] items-center justify-center">
