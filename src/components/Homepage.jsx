@@ -119,7 +119,7 @@ function Homepage() {
 
           elements.forEach((element) => {
             const li = document.createElement("li");
-            li.textContent = element.name + "    " + element.description;
+            li.textContent = element.name + "  |  " + element.description + "  |  " + element.user.phone_number;
             li.classList.add(
               "flex",
               "m-2",
@@ -168,14 +168,6 @@ function Homepage() {
     };
     setMarker(newMarker);
     setIsDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const onMarkerClick = () => {
-    toggleDropdown();
   };
 
   function highlightMapMarker(lat, lng) {
@@ -278,16 +270,8 @@ function Homepage() {
                 {markersArray.map((marker, index) => (
                   <Marker
                     key={index}
-                    position={{
-                      lat: marker.coordinates.latitude,
-                      lng: marker.coordinates.longitude,
-                    }}
-                    onClick={() =>
-                      onMarkerClick({ x: event.clientX, y: event.clientY })
-                    }
-                    icon={
-                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"
-                    }
+                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
+                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
                   />
                 ))}
               </GoogleMap>
@@ -339,19 +323,6 @@ function Homepage() {
           ) : null}
         </LoadScript>
       </div>
-      {isDropdownOpen && (
-        <div
-          style={{
-            position: "absolute",
-            top: dropdownPosition.y,
-            left: dropdownPosition.x,
-          }}
-        >
-          <div style={{ background: "white", width: "200px", height: "200px" }}>
-            hello
-          </div>
-        </div>
-      )}
       <div className="flex items-center justify-center bg-khaki-green2 py-6 text-4xl text-beige2">
         Продовжуючи допомагати іншим, ми зберігаємо свою людяність.
       </div>
