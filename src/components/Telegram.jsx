@@ -9,6 +9,9 @@ async function handleSuccess(response) {
   console.log(body);
   try {
     let apiResponse = await axios.get(URL + "/docs");
+    if (apiResponse.status === 200) {
+      localStorage.setItem("isAuthentifited", true)
+    }
   } catch (err) {
     console.log(err);
   }
