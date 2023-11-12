@@ -136,7 +136,7 @@ function Homepage() {
             );
 
             const img = document.createElement("img");
-            img.src = "./public/images/edit.svg";
+            img.src = "./images/edit.svg";
             img.classList = "h-6 w-6 ml-4 hover:cursor-pointer";
 
             li.addEventListener("click", () => {
