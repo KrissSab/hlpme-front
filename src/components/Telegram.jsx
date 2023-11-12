@@ -1,20 +1,10 @@
 import useTelegramAuth from "@use-telegram-auth/hook";
+import { URL } from "../constants";
 import axios from "axios";
-import { URL } from "../constants"
 
 async function handleSuccess(response) {
-  console.log(response);
-  const url = "https://http.cat/200";
-  const body = JSON.stringify(response);
-  console.log(body);
-  try {
-    let apiResponse = await axios.get(URL + "/docs");
-    if (apiResponse.status === 200) {
-      localStorage.setItem("isAuthentifited", true)
-    }
-  } catch (err) {
-    console.log(err);
-  }
+  localStorage.setItem("isAuthenticated", true);
+  localStorage.setItem("userId", response["id"]);
 }
 
 function Telegram() {
