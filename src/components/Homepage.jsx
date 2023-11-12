@@ -22,7 +22,6 @@ function Homepage() {
   const [markersArray, setMarkersArray] = useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 49.839684, lng: 24.029716 });
   let isMounted = false
-  localStorage.setItem("userId", "926073550")
   const changeHandler = (e, setter) => {
     setter(e.target.value);
   };
@@ -154,7 +153,7 @@ function Homepage() {
         ) : (
           <Link to="/tg"
             className="text-3xl font-semibold hover:cursor-pointer"
-            onClick={() => setUserStatus(true)}
+
           >
             Sign In
           </Link>
