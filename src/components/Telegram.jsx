@@ -1,17 +1,27 @@
 import useTelegramAuth from "@use-telegram-auth/hook";
-import axios from "axios";
-import { URL } from "../constants"
+import { URL } from "../constants";
 
 async function handleSuccess(response) {
-  console.log(response);
-  const url = "https://http.cat/200";
-  const body = JSON.stringify(response);
+  response["user_id"] = response["id"];
+
+  localStorage.setItem("user_id", response["id"]);
+
+  const body = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(response),
+  };
+
   console.log(body);
-  try {
-    let apiResponse = await axios.get(URL + "/docs");
-  } catch (err) {
-    console.log(err);
-  }
+
+  let apiResponse = await fetch(`${URL}/tg/login`, body);
+  apiResponse = await apiResponse.json();
+  setTimeout(() => null, 2000);
+  let registerApiResponse = await fetch(`${URL}/tg/register`, body);
+  registerApiResponse = await registerApiResponse.json();
+  console.log(registerApiResponse);
 }
 
 function Telegram() {
