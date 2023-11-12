@@ -17,7 +17,7 @@ function Homepage() {
   const [isRequestMade, setIsRequestMade] = useState(false);
   const [userStatus, setUserStatus] = useState(true);
   const [userToken, setUserToken] = useState(null);
-  const markersArray = [];
+  const [markersArray, setMarkersArray] = useState([]);
   let isMounted = false
 
   const changeHandler = (e, setter) => {
@@ -70,6 +70,9 @@ function Homepage() {
           elements.forEach((element) => {
             const li = document.createElement("li");
             li.textContent = element.name;
+            const updatedMarkersArray = elements.map((element) => ({
+              ...element,
+            }));
             li.classList.add(
               "flex",
               "m-2",
@@ -88,7 +91,8 @@ function Homepage() {
             ul.appendChild(li);
             isMounted = true
 
-            markersArray.push(element);
+
+            setMarkersArray(updatedMarkersArray);
 
           });
         })
@@ -116,6 +120,8 @@ function Homepage() {
   const onMarkerClick = () => {
     toggleDropdown();
   };
+
+  console.log(markersArray + " 1")
 
   return (
     <div className=" h-screen w-screen bg-khaki-green2">
@@ -204,12 +210,13 @@ function Homepage() {
                   />
                 )}
 
-                {markersArray.length > 0 && markersArray.map(marker => (<Marker
-                  position={{ lat: 49.839684, lng: 24.029716 }}
-                  icon={
-                    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
-                  }
-                />)) || <Marker position={{ lat: 49.839684, lng: 24.029716 }} />}
+                {markersArray.map((marker, index) => (
+                  <Marker
+                    key={index}
+                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }} // Припустимо, що дані про координати зберігаються у полях latitude та longitude
+                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"} // URL до зображення маркеру
+                  />
+                ))}
 
               </GoogleMap>
               <div className="ml-8 h-[600px] w-[600px] rounded-2xl border-4 border-black bg-white">
