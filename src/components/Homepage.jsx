@@ -17,6 +17,7 @@ function Homepage() {
   const [isRequestMade, setIsRequestMade] = useState(false);
   const [userStatus, setUserStatus] = useState(true);
   const [userToken, setUserToken] = useState(null);
+  const markersArray = [];
   let isMounted = false
 
   const changeHandler = (e, setter) => {
@@ -86,16 +87,12 @@ function Homepage() {
             li.appendChild(img);
             ul.appendChild(li);
             isMounted = true
-          });
-          elements.forEach((element) => {
-            const marker = new window.google.maps.Marker({
-              position: { lat: element.coordinates.latitude, lng: element.coordinates.longitude },
-              map: map,
-              title: element.name,
+
+            markersArray.push({
+              element,
             });
+            console.log(markersArray)
           });
-
-
         })
         .catch((error) => {
           console.error("Помилка запиту:", error);
@@ -204,6 +201,14 @@ function Homepage() {
                     icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
                   />
                 )}
+                {markersArray.map(marker => (
+                  <Marker
+                    key={marker.date_time}
+                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
+                    onClick={() => onMarkerClick(marker)}
+                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
+                  />
+                ))}
               </GoogleMap>
               <div className="ml-8 h-[600px] w-[600px] rounded-2xl border-4 border-black bg-white">
                 <h3 className="m-2 flex items-center justify-center text-2xl font-semibold">
