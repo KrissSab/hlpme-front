@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import heartImg from "../images/heart.svg";
-import jar from "../../jar.jpg";
-import helpingImg from "../../helping-right.jpg";
+
 import { API_KEY } from "../constants";
 import { URL } from "../constants";
 
@@ -66,8 +64,11 @@ function Homepage() {
   const [userStatus, setUserStatus] = useState(true);
   const [userToken, setUserToken] = useState(null);
   const [markersArray, setMarkersArray] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 49.839684, lng: 24.029716 });
-  let isMounted = false
+  const [mapCenter, setMapCenter] = useState({
+    lat: 49.839684,
+    lng: 24.029716,
+  });
+  let isMounted = false;
   const changeHandler = (e, setter) => {
     setter(e.target.value);
   };
@@ -134,7 +135,10 @@ function Homepage() {
             img.classList = "h-6 w-6 ml-4 hover:cursor-pointer";
 
             li.addEventListener("click", () => {
-              highlightMapMarker(element.coordinates.latitude, element.coordinates.longitude);
+              highlightMapMarker(
+                element.coordinates.latitude,
+                element.coordinates.longitude,
+              );
             });
 
             li.appendChild(img);
@@ -142,7 +146,9 @@ function Homepage() {
             isMounted = true;
           });
 
-          const updatedMarkersArray = elements.map((element) => ({ ...element }));
+          const updatedMarkersArray = elements.map((element) => ({
+            ...element,
+          }));
           setMarkersArray(updatedMarkersArray);
         }
       } catch (error) {
@@ -173,15 +179,15 @@ function Homepage() {
   };
 
   function highlightMapMarker(lat, lng) {
-    console.log({ lat: lat, lng: lng })
+    console.log({ lat: lat, lng: lng });
     setMapCenter({ lat: lat, lng: lng });
-  };
+  }
 
   return (
     <div className=" h-screen w-screen bg-khaki-green2">
       <nav className="flex h-[61px] w-screen justify-between bg-beige2 p-3">
         <p className="flex text-3xl font-semibold">
-          <img className=" m-1.5 h-7 w-7" src={heartImg}></img>
+          <img className=" m-1.5 h-7 w-7" src={"./images/heart.svg"}></img>
           HlpMe
         </p>
         {userStatus ? (
@@ -197,9 +203,9 @@ function Homepage() {
             Log Out
           </a>
         ) : (
-          <Link to="/tg"
+          <Link
+            to="/tg"
             className="text-3xl font-semibold hover:cursor-pointer"
-
           >
             Sign In
           </Link>
@@ -207,11 +213,19 @@ function Homepage() {
       </nav>
       <div className="flex h-[750px] items-center justify-center p-6">
         <div className="flex items-center justify-around gap-[100px] p-12">
-          <img src={jar} className=" h-[450px] w-[400px] rounded-2xl"></img>
+          <img
+            src={"./images/jar.jpg"}
+            className=" h-[450px] w-[400px] rounded-2xl"
+          ></img>
           <p className="m-4 max-w-[300px] flex-wrap text-center text-2xl font-medium text-beige2">
-            Доможи людям, що потребують допомоги біля тебе, або доєднайся до глобальних зборів. Навіть малий внесок може вплинути на результат всієї картини. Ми - це Україна
+            Доможи людям, що потребують допомоги біля тебе, або доєднайся до
+            глобальних зборів. Навіть малий внесок може вплинути на результат
+            всієї картини. Ми - це Україна
           </p>
-          <img src={helpingImg} className=" h-[450px] w-[400px] rounded-2xl"></img>
+          <img
+            src={"./images/helping-right.jpg"}
+            className=" h-[450px] w-[400px] rounded-2xl"
+          ></img>
         </div>
       </div>
       <div className="flex w-screen justify-around pb-[62px]">
@@ -264,12 +278,18 @@ function Homepage() {
                 {markersArray.map((marker, index) => (
                   <Marker
                     key={index}
-                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
-                    onClick={() => onMarkerClick({ x: event.clientX, y: event.clientY })}
-                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
+                    position={{
+                      lat: marker.coordinates.latitude,
+                      lng: marker.coordinates.longitude,
+                    }}
+                    onClick={() =>
+                      onMarkerClick({ x: event.clientX, y: event.clientY })
+                    }
+                    icon={
+                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"
+                    }
                   />
                 ))}
-
               </GoogleMap>
               <div className="ml-8 h-[600px] w-[600px] rounded-2xl border-4 border-black bg-white">
                 <h3 className="m-2 flex items-center justify-center text-2xl font-semibold">
@@ -320,8 +340,14 @@ function Homepage() {
         </LoadScript>
       </div>
       {isDropdownOpen && (
-        <div style={{ position: 'absolute', top: dropdownPosition.y, left: dropdownPosition.x }}>
-          <div style={{ background: 'white', width: '200px', height: '200px' }}>
+        <div
+          style={{
+            position: "absolute",
+            top: dropdownPosition.y,
+            left: dropdownPosition.x,
+          }}
+        >
+          <div style={{ background: "white", width: "200px", height: "200px" }}>
             hello
           </div>
         </div>

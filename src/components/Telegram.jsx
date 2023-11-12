@@ -1,5 +1,5 @@
 import useTelegramAuth from "@use-telegram-auth/hook";
-import TelegramLogo from "./telegram-logo.svg";
+
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
@@ -49,7 +49,7 @@ function Telegram() {
             <span className="flex gap-3">
               <img
                 className="w-[32px]"
-                src={TelegramLogo}
+                src={"./images/telegram-logo.svg"}
                 alt="Telegram logo"
               />
               Sign in with Telegram{" "}
