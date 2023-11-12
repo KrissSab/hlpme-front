@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import heartImg from "../images/heart.svg";
-import helpImg from "../images/help.jpg";
+import jar from "../../jar.jpg";
+import helpingImg from "../../helping-right.jpg";
 import { API_KEY } from "../constants";
 import { URL } from "../constants";
 
@@ -63,9 +65,9 @@ function Homepage() {
   const [isRequestMade, setIsRequestMade] = useState(false);
   const [userStatus, setUserStatus] = useState(true);
   const [userToken, setUserToken] = useState(null);
-  const markersArray = [];
-  let isMounted = false;
-
+  const [markersArray, setMarkersArray] = useState([]);
+  const [mapCenter, setMapCenter] = useState({ lat: 49.839684, lng: 24.029716 });
+  let isMounted = false
   const changeHandler = (e, setter) => {
     setter(e.target.value);
   };
@@ -103,19 +105,20 @@ function Homepage() {
   }, []);
 
   useEffect(() => {
-    if (isRequestMade == false) {
-      axios
-        .get(URL + "/local/dangers")
-        .then((response) => {
-          setIsRequestMade(true);
+    const fetchData = async () => {
+      try {
+        if (!isRequestMade) {
+          const response = await axios.get(URL + "/local/dangers");
           const elements = response.data;
+
+          setIsRequestMade(true);
 
           const ul = document.getElementById("myMarkersList");
           if (isMounted) return;
 
           elements.forEach((element) => {
             const li = document.createElement("li");
-            li.textContent = element.name;
+            li.textContent = element.name + "    " + element.description;
             li.classList.add(
               "flex",
               "m-2",
@@ -130,17 +133,24 @@ function Homepage() {
             img.src = "edit.svg";
             img.classList = "h-6 w-6 ml-4 hover:cursor-pointer";
 
+            li.addEventListener("click", () => {
+              highlightMapMarker(element.coordinates.latitude, element.coordinates.longitude);
+            });
+
             li.appendChild(img);
             ul.appendChild(li);
             isMounted = true;
-
-            markersArray.push(element);
           });
-        })
-        .catch((error) => {
-          console.error("Помилка запиту:", error);
-        });
-    }
+
+          const updatedMarkersArray = elements.map((element) => ({ ...element }));
+          setMarkersArray(updatedMarkersArray);
+        }
+      } catch (error) {
+        console.error("Помилка запиту:", error);
+      }
+    };
+
+    fetchData();
   }, [isRequestMade]);
 
   const onMapClick = (event) => {
@@ -160,6 +170,11 @@ function Homepage() {
 
   const onMarkerClick = () => {
     toggleDropdown();
+  };
+
+  function highlightMapMarker(lat, lng) {
+    console.log({ lat: lat, lng: lng })
+    setMapCenter({ lat: lat, lng: lng });
   };
 
   return (
@@ -182,24 +197,21 @@ function Homepage() {
             Log Out
           </a>
         ) : (
-          <a
+          <Link to="/tg"
             className="text-3xl font-semibold hover:cursor-pointer"
-            onClick={() => setUserStatus(true)}
+
           >
-            Sign Up
-          </a>
+            Sign In
+          </Link>
         )}
       </nav>
       <div className="flex h-[750px] items-center justify-center p-6">
         <div className="flex items-center justify-around gap-[100px] p-12">
-          <img src={helpImg} className=" h-[450px] w-[400px] rounded-2xl"></img>
+          <img src={jar} className=" h-[450px] w-[400px] rounded-2xl"></img>
           <p className="m-4 max-w-[300px] flex-wrap text-center text-2xl font-medium text-beige2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-            minus alias iste aperiam labore a magni porro vel, doloribus
-            maiores, architecto, quos sit voluptas eligendi facere laboriosam
-            quas. Ratione, fugiat!
+            Доможи людям, що потребують допомоги біля тебе, або доєднайся до глобальних зборів. Навіть малий внесок може вплинути на результат всієї картини. Ми - це Україна
           </p>
-          <img src={helpImg} className=" h-[450px] w-[400px] rounded-2xl"></img>
+          <img src={helpingImg} className=" h-[450px] w-[400px] rounded-2xl"></img>
         </div>
       </div>
       <div className="flex w-screen justify-around pb-[62px]">
@@ -210,7 +222,7 @@ function Homepage() {
             scrollDown();
           }}
         >
-          Global Help
+          Глобальна допомога
         </p>
         <p
           className="mt-[-50px] rounded-2xl border-4 border-beige2 bg-beige2 px-20 py-8 text-3xl font-semibold hover:cursor-pointer hover:border-4 hover:border-black"
@@ -219,7 +231,7 @@ function Homepage() {
             scrollDown();
           }}
         >
-          Local Help
+          Локальна допомога
         </p>
       </div>
       <div className="flex h-screen w-screen flex-grow items-center justify-center bg-beige2">
@@ -236,7 +248,7 @@ function Homepage() {
                   marginRight: "32px",
                 }}
                 zoom={13}
-                center={{ lat: 49.839684, lng: 24.029716 }}
+                center={mapCenter}
                 onClick={onMapClick}
               >
                 {marker && (
@@ -249,32 +261,30 @@ function Homepage() {
                   />
                 )}
 
-                {(markersArray.length > 0 &&
-                  markersArray.map((marker) => (
-                    <Marker
-                      position={{ lat: 49.839684, lng: 24.029716 }}
-                      icon={
-                        "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
-                      }
-                    />
-                  ))) || (
-                  <Marker position={{ lat: 49.839684, lng: 24.029716 }} />
-                )}
+                {markersArray.map((marker, index) => (
+                  <Marker
+                    key={index}
+                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
+                    onClick={() => onMarkerClick({ x: event.clientX, y: event.clientY })}
+                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
+                  />
+                ))}
+
               </GoogleMap>
               <div className="ml-8 h-[600px] w-[600px] rounded-2xl border-4 border-black bg-white">
                 <h3 className="m-2 flex items-center justify-center text-2xl font-semibold">
-                  My markers:
+                  Мітки:
                 </h3>
                 <ul
                   id="myMarkersList"
                   className=" h-[300px] max-h-[250px] overflow-scroll"
                 ></ul>
                 <div className="flex items-center justify-center border-t-4 border-black text-lg font-medium">
-                  Last chosen position:
+                  Остання мітка:
                   <p className="mx-2 w-[175px] p-1 text-lg font-medium text-gray-900">
                     {lastLatPosition}
                   </p>
-                  and
+                  і
                   <p className="mx-2 w-[170px] p-1 text-lg font-medium text-gray-900">
                     {lastLngPosition}
                   </p>
@@ -282,14 +292,14 @@ function Homepage() {
                 <div className="flex flex-col items-center justify-around ">
                   <input
                     type="text"
-                    placeholder="Problem name"
+                    placeholder="Назва проблеми"
                     className="m-2 h-[40px] w-[550px] rounded-xl border-2 border-black p-4 text-xl"
                     onChange={(e) => {
                       changeHandler(e, setProblemName);
                     }}
                   />
                   <textarea
-                    placeholder="Description"
+                    placeholder="Опис проблеми"
                     className="m-2 h-[100px] w-[550px] break-words rounded-xl border-2 border-black p-4 text-lg"
                     onChange={(e) => {
                       changeHandler(e, setDescription);
@@ -301,7 +311,7 @@ function Homepage() {
                   className="flex items-center justify-center"
                 >
                   <span className="rounded-2xl border-8 border-khaki-green2 bg-khaki-green2 px-12 py-4 text-xl font-semibold text-beige2 duration-300 ease-out hover:cursor-pointer hover:border-black/25">
-                    Create marker
+                    Створити мітку
                   </span>
                 </div>
               </div>
@@ -309,9 +319,15 @@ function Homepage() {
           ) : null}
         </LoadScript>
       </div>
+      {isDropdownOpen && (
+        <div style={{ position: 'absolute', top: dropdownPosition.y, left: dropdownPosition.x }}>
+          <div style={{ background: 'white', width: '200px', height: '200px' }}>
+            hello
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-center bg-khaki-green2 py-6 text-4xl text-beige2">
-        {" "}
-        By continuing to help others, you maintain your humanity.
+        Продовжуючи допомагати іншим, ми зберігаємо свою людяність.
       </div>
     </div>
   );
