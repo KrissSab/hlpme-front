@@ -17,7 +17,8 @@ function Homepage() {
   const [isRequestMade, setIsRequestMade] = useState(false);
   const [userStatus, setUserStatus] = useState(true);
   const [userToken, setUserToken] = useState(null);
-  let isMounted = false;
+  const markersArray = [];
+  let isMounted = false
 
   const changeHandler = (e, setter) => {
     setter(e.target.value);
@@ -62,7 +63,7 @@ function Homepage() {
         .then((response) => {
           setIsRequestMade(true);
           const elements = response.data;
-          console.log(response.data);
+
           const ul = document.getElementById("myMarkersList");
           if (isMounted) return;
 
@@ -85,17 +86,10 @@ function Homepage() {
 
             li.appendChild(img);
             ul.appendChild(li);
-            isMounted = true;
-          });
-          elements.forEach((element) => {
-            const marker = new window.google.maps.Marker({
-              position: {
-                lat: element.coordinates.latitude,
-                lng: element.coordinates.longitude,
-              },
-              map: map,
-              title: element.name,
-            });
+            isMounted = true
+
+            markersArray.push(element);
+
           });
         })
         .catch((error) => {
@@ -205,10 +199,18 @@ function Homepage() {
                     position={{ lat: marker.lat, lng: marker.lng }}
                     onClick={onMarkerClick}
                     icon={
-                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"
+                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
                     }
                   />
                 )}
+
+                {markersArray.length > 0 && markersArray.map(marker => (<Marker
+                  position={{ lat: 49.839684, lng: 24.029716 }}
+                  icon={
+                    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
+                  }
+                />)) || <Marker position={{ lat: 49.839684, lng: 24.029716 }} />}
+
               </GoogleMap>
               <div className="ml-8 h-[600px] w-[600px] rounded-2xl border-4 border-black bg-white">
                 <h3 className="m-2 flex items-center justify-center text-2xl font-semibold">
