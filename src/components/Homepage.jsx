@@ -19,7 +19,7 @@ function Homepage() {
   const [userToken, setUserToken] = useState(null);
   const [markersArray, setMarkersArray] = useState([]);
   let isMounted = false
-
+  localStorage.setItem("userId", "926073550")
   const changeHandler = (e, setter) => {
     setter(e.target.value);
   };
@@ -57,12 +57,13 @@ function Homepage() {
   }, []);
 
   useEffect(() => {
-    if (isRequestMade == false) {
-      axios
-        .get(URL + "/local/dangers")
-        .then((response) => {
-          setIsRequestMade(true);
+    const fetchData = async () => {
+      try {
+        if (!isRequestMade) {
+          const response = await axios.get(URL + "/local/dangers");
           const elements = response.data;
+
+          setIsRequestMade(true);
 
           const ul = document.getElementById("myMarkersList");
           if (isMounted) return;
@@ -70,9 +71,6 @@ function Homepage() {
           elements.forEach((element) => {
             const li = document.createElement("li");
             li.textContent = element.name;
-            const updatedMarkersArray = elements.map((element) => ({
-              ...element,
-            }));
             li.classList.add(
               "flex",
               "m-2",
@@ -89,17 +87,18 @@ function Homepage() {
 
             li.appendChild(img);
             ul.appendChild(li);
-            isMounted = true
-
-
-            setMarkersArray(updatedMarkersArray);
-
+            isMounted = true;
           });
-        })
-        .catch((error) => {
-          console.error("Помилка запиту:", error);
-        });
-    }
+
+          const updatedMarkersArray = elements.map((element) => ({ ...element }));
+          setMarkersArray(updatedMarkersArray);
+        }
+      } catch (error) {
+        console.error("Помилка запиту:", error);
+      }
+    };
+
+    fetchData();
   }, [isRequestMade]);
 
   const onMapClick = (event) => {
@@ -120,8 +119,6 @@ function Homepage() {
   const onMarkerClick = () => {
     toggleDropdown();
   };
-
-  console.log(markersArray + " 1")
 
   return (
     <div className=" h-screen w-screen bg-khaki-green2">
@@ -213,8 +210,9 @@ function Homepage() {
                 {markersArray.map((marker, index) => (
                   <Marker
                     key={index}
-                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }} // Припустимо, що дані про координати зберігаються у полях latitude та longitude
-                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"} // URL до зображення маркеру
+                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
+                    onClick={() => onMarkerClick({ x: event.clientX, y: event.clientY })}
+                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
                   />
                 ))}
 
@@ -267,6 +265,13 @@ function Homepage() {
           ) : null}
         </LoadScript>
       </div>
+      {isDropdownOpen && (
+        <div style={{ position: 'absolute', top: dropdownPosition.y, left: dropdownPosition.x }}>
+          <div style={{ background: 'white', width: '200px', height: '200px' }}>
+            hello
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-center bg-khaki-green2 py-6 text-4xl text-beige2">
         {" "}
         By continuing to help others, you maintain your humanity.
