@@ -79,6 +79,7 @@ function Homepage() {
       behavior: "smooth",
     });
   }
+  let loadMarks = false;
 
   const submitData = async (event) => {
     event.preventDefault();
@@ -115,11 +116,15 @@ function Homepage() {
           setIsRequestMade(true);
 
           const ul = document.getElementById("myMarkersList");
-          if (isMounted) return;
 
           elements.forEach((element) => {
             const li = document.createElement("li");
-            li.textContent = element.name + "  |  " + element.description + "  |  " + element.user.phone_number;
+            li.textContent =
+              element.name +
+              "  |  " +
+              element.description +
+              "  |  " +
+              element.user.phone_number;
             li.classList.add(
               "flex",
               "m-2",
@@ -131,7 +136,7 @@ function Homepage() {
             );
 
             const img = document.createElement("img");
-            img.src = "edit.svg";
+            img.src = "./public/images/edit.svg";
             img.classList = "h-6 w-6 ml-4 hover:cursor-pointer";
 
             li.addEventListener("click", () => {
@@ -270,8 +275,13 @@ function Homepage() {
                 {markersArray.map((marker, index) => (
                   <Marker
                     key={index}
-                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
-                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
+                    position={{
+                      lat: marker.coordinates.latitude,
+                      lng: marker.coordinates.longitude,
+                    }}
+                    icon={
+                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"
+                    }
                   />
                 ))}
               </GoogleMap>
