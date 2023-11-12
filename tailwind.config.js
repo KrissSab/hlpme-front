@@ -6,9 +6,10 @@ export default {
         'green': "url('../images/background.jpg')",
       },
       colors: {
-        "light-green": "#a5ff8d",
-        "midle-green": "#23e912",
-        "dark-green": "#37910a",
+        "khaki-green": "#81855D",
+        "beige": "#f9f1e2",
+        "khaki-green2": "#777D4F",
+        "beige2": "#FAF5EB",
       },
       plugins: [],
     },

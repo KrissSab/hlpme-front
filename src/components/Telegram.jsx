@@ -1,13 +1,13 @@
 import useTelegramAuth from "@use-telegram-auth/hook";
 import axios from "axios";
+import { URL } from "../constants"
 
 async function handleSuccess(response) {
   console.log(response);
   const url = "https://http.cat/200";
   const body = JSON.stringify(response);
   try {
-    let apiResponse = await axios.get("https://http.cat/200");
-    console.log(apiResponse);
+    let apiResponse = await axios.get(URL + "/docs");
   } catch (err) {
     console.log(err);
   }
