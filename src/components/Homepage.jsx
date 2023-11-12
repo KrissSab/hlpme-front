@@ -20,6 +20,7 @@ function Homepage() {
   const [userStatus, setUserStatus] = useState(true);
   const [userToken, setUserToken] = useState(null);
   const [markersArray, setMarkersArray] = useState([]);
+  const [mapCenter, setMapCenter] = useState({ lat: 49.839684, lng: 24.029716 });
   let isMounted = false
   localStorage.setItem("userId", "926073550")
   const changeHandler = (e, setter) => {
@@ -87,6 +88,10 @@ function Homepage() {
             img.src = "edit.svg";
             img.classList = "h-6 w-6 ml-4 hover:cursor-pointer";
 
+            li.addEventListener("click", () => {
+              highlightMapMarker(element.coordinates.latitude, element.coordinates.longitude);
+            });
+
             li.appendChild(img);
             ul.appendChild(li);
             isMounted = true;
@@ -120,6 +125,11 @@ function Homepage() {
 
   const onMarkerClick = () => {
     toggleDropdown();
+  };
+
+  function highlightMapMarker(lat, lng) {
+    console.log({ lat: lat, lng: lng })
+    setMapCenter({ lat: lat, lng: lng });
   };
 
   return (
@@ -193,7 +203,7 @@ function Homepage() {
                   marginRight: "32px",
                 }}
                 zoom={13}
-                center={{ lat: 49.839684, lng: 24.029716 }}
+                center={mapCenter}
                 onClick={onMapClick}
               >
                 {marker && (
