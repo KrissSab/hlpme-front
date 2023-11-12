@@ -8,6 +8,52 @@ import helpingImg from "../../helping-right.jpg";
 import { API_KEY } from "../constants";
 import { URL } from "../constants";
 
+function Card(properties) {
+  return (
+    <div class="flex  max-w-sm flex-col justify-center rounded-lg border-4 border-black/25 bg-khaki-green2 p-5 duration-300 hover:scale-110 hover:bg-khaki-green2/90">
+      <h5 class="mb-2 text-2xl font-bold tracking-tight text-white">
+        {properties.name}
+      </h5>
+      <p class="font-normal text-white">{properties.description}</p>
+      <a
+        target="_blank"
+        className="flex items-center justify-center text-white duration-300 hover:scale-125"
+        href={properties.link}
+      >
+        <button className="mt-2 rounded-lg border-2 border-black/50 p-2  text-white">
+          Переглянути збір
+        </button>
+      </a>
+    </div>
+  );
+}
+
+function GlobalContent() {
+  const [items, setFetchedItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${URL}/global/dangers`);
+        setFetchedItems(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const listItems = items.map((item) => <Card key={item.id} {...item} />);
+
+  return (
+    <>
+      {items.length > 0 ? (
+        <div className="grid grid-cols-3 grid-rows-2 gap-9">{listItems}</div>
+      ) : null}
+    </>
+  );
+}
+
 function Homepage() {
   const [select, setSelect] = useState("Local");
   const [marker, setMarker] = useState(null);
@@ -180,9 +226,9 @@ function Homepage() {
           Локальна допомога
         </p>
       </div>
-      <div className="flex h-screen w-screen items-center justify-center bg-beige2">
+      <div className="flex h-screen w-screen flex-grow items-center justify-center bg-beige2">
         <LoadScript googleMapsApiKey={API_KEY}>
-          {select === "Global" ? <div>Global content</div> : null}
+          {select === "Global" ? <GlobalContent /> : null}
           {select === "Local" ? (
             <div className="flex justify-center py-12">
               <GoogleMap
