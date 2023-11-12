@@ -17,7 +17,7 @@ function Homepage() {
   const [isRequestMade, setIsRequestMade] = useState(false);
   const [userStatus, setUserStatus] = useState(true);
   const [userToken, setUserToken] = useState(null);
-  let isMounted = false
+  let isMounted = false;
 
   const changeHandler = (e, setter) => {
     setter(e.target.value);
@@ -32,9 +32,10 @@ function Homepage() {
 
   const submitData = async (event) => {
     event.preventDefault();
-    let response
+    let response;
     try {
       const data = {
+        user_id: localStorage.getItem("userId"),
         name: problemName,
         description: description,
         coordinates: {
@@ -42,7 +43,7 @@ function Homepage() {
           longitude: lastLngPosition,
         },
         date_time: "2",
-        accessToken: "ss",
+        accessToken: "examplevlaue",
       };
       response = await axios.post(URL + "/local/dangers/create", data);
     } catch (error) {
@@ -55,16 +56,15 @@ function Homepage() {
   }, []);
 
   useEffect(() => {
-
     if (isRequestMade == false) {
       axios
         .get(URL + "/local/dangers")
         .then((response) => {
           setIsRequestMade(true);
           const elements = response.data;
-          console.log(response.data)
+          console.log(response.data);
           const ul = document.getElementById("myMarkersList");
-          if (isMounted) return
+          if (isMounted) return;
 
           elements.forEach((element) => {
             const li = document.createElement("li");
@@ -85,17 +85,18 @@ function Homepage() {
 
             li.appendChild(img);
             ul.appendChild(li);
-            isMounted = true
+            isMounted = true;
           });
           elements.forEach((element) => {
             const marker = new window.google.maps.Marker({
-              position: { lat: element.coordinates.latitude, lng: element.coordinates.longitude },
+              position: {
+                lat: element.coordinates.latitude,
+                lng: element.coordinates.longitude,
+              },
               map: map,
               title: element.name,
             });
           });
-
-
         })
         .catch((error) => {
           console.error("Помилка запиту:", error);
@@ -136,14 +137,16 @@ function Homepage() {
               localStorage.setItem("isAuthenticated", false);
               localStorage.setItem("userToken", "");
               setUserStatus(false);
-              setUserToken("")
-            }}>
+              setUserToken("");
+            }}
+          >
             Log Out
           </a>
         ) : (
           <a
             className="text-3xl font-semibold hover:cursor-pointer"
-            onClick={() => setUserStatus(true)}>
+            onClick={() => setUserStatus(true)}
+          >
             Sign Up
           </a>
         )}
@@ -162,7 +165,7 @@ function Homepage() {
       </div>
       <div className="flex w-screen justify-around pb-[62px]">
         <p
-          className="mt-[-50px] rounded-2xl border-4 border-beige2 bg-beige2 px-20 py-8 text-3xl font-semibold hover:cursor-pointer hover:border-4 duration-300 ease-out hover:border-black"
+          className="mt-[-50px] rounded-2xl border-4 border-beige2 bg-beige2 px-20 py-8 text-3xl font-semibold duration-300 ease-out hover:cursor-pointer hover:border-4 hover:border-black"
           onClick={() => {
             setSelect("Global");
             scrollDown();
@@ -201,7 +204,9 @@ function Homepage() {
                   <Marker
                     position={{ lat: marker.lat, lng: marker.lng }}
                     onClick={onMarkerClick}
-                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
+                    icon={
+                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"
+                    }
                   />
                 )}
               </GoogleMap>
@@ -244,7 +249,7 @@ function Homepage() {
                   onClick={submitData}
                   className="flex items-center justify-center"
                 >
-                  <span className="rounded-2xl border-8 bg-khaki-green2 border-khaki-green2 px-12 py-4 text-xl font-semibold text-beige2 duration-300 ease-out hover:cursor-pointer hover:border-black/25">
+                  <span className="rounded-2xl border-8 border-khaki-green2 bg-khaki-green2 px-12 py-4 text-xl font-semibold text-beige2 duration-300 ease-out hover:cursor-pointer hover:border-black/25">
                     Create marker
                   </span>
                 </div>
