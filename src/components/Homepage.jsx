@@ -63,7 +63,7 @@ function Homepage() {
         .then((response) => {
           setIsRequestMade(true);
           const elements = response.data;
-          console.log(response.data);
+
           const ul = document.getElementById("myMarkersList");
           if (isMounted) return;
 
@@ -88,10 +88,8 @@ function Homepage() {
             ul.appendChild(li);
             isMounted = true
 
-            markersArray.push({
-              element,
-            });
-            console.log(markersArray)
+            markersArray.push(element);
+
           });
         })
         .catch((error) => {
@@ -201,18 +199,18 @@ function Homepage() {
                     position={{ lat: marker.lat, lng: marker.lng }}
                     onClick={onMarkerClick}
                     icon={
-                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"
+                      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
                     }
                   />
                 )}
-                {markersArray.map(marker => (
-                  <Marker
-                    key={marker.date_time}
-                    position={{ lat: marker.coordinates.latitude, lng: marker.coordinates.longitude }}
-                    onClick={() => onMarkerClick(marker)}
-                    icon={"https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png"}
-                  />
-                ))}
+
+                {markersArray.length > 0 && markersArray.map(marker => (<Marker
+                  position={{ lat: 49.839684, lng: 24.029716 }}
+                  icon={
+                    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
+                  }
+                />)) || <Marker position={{ lat: 49.839684, lng: 24.029716 }} />}
+
               </GoogleMap>
               <div className="ml-8 h-[600px] w-[600px] rounded-2xl border-4 border-black bg-white">
                 <h3 className="m-2 flex items-center justify-center text-2xl font-semibold">
