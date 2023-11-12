@@ -14,14 +14,14 @@ async function handleSuccess(response) {
     body: JSON.stringify(response),
   };
 
-  console.log(body);
-
-  let apiResponse = await fetch(`${URL}/tg/login`, body);
-  apiResponse = await apiResponse.json();
-  setTimeout(() => null, 2000);
-  let registerApiResponse = await fetch(`${URL}/tg/register`, body);
-  registerApiResponse = await registerApiResponse.json();
-  console.log(registerApiResponse);
+  try {
+    let apiResponse = await axios.get(URL + "/docs");
+    if (apiResponse.status === 200) {
+      localStorage.setItem("isAuthentifited", true);
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 function Telegram() {
